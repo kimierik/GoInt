@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"go/doc/comment"
 	"os"
 )
 
@@ -25,6 +24,8 @@ const (
     Paren
     Curly
     Comma
+
+    EOF
 )
 
 
@@ -113,6 +114,7 @@ func lexInput(input string)[]Token{
 
 
     }
+    tokens = append(tokens, Token{EOF,"s"})
     return tokens
 
 }
