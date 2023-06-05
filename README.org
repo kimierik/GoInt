@@ -1,0 +1,15 @@
+* Interpreter in go
+  a go learning experiance. not meant to be used in anything
+
+** Todo
+   variables  
+   function declaretions
+   interpreting files
+   operrands
+   somethig cool :)
+
+** supported features
+   logging literals
+
+
+
