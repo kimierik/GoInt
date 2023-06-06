@@ -1,0 +1,8 @@
+
+testfn(){
+    log(2,3)
+}
+
+testfn()
+
+

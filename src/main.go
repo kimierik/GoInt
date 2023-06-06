@@ -1,11 +1,11 @@
 package main
 
-
-//lexer
 import (
-    "bufio"
-    "fmt"
-    "os"
+	"bufio"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 )
 
 
@@ -15,41 +15,58 @@ import (
 
 func main(){
 
-    fmt.Println("starting interpreter")
-
-    //wait for user input 
-    //lex it
-    //parse it  or error
-    //execute it  (send to interpreter) //user input could be listened in the interpreter
-    
-
-    //mem and stack as 2 different variables
-    //mem has functions and variables
-    //stack is used in ops
-
-
 
     
    intr:=Interpreter{memory:make(map[string]Variable), functions: make(map[string]Function) }
    intr.addCoreFns()
 
-    for{
-        fmt.Print(">")
-        reader:= bufio.NewReader(os.Stdin)
-        input, _ :=reader.ReadString('\n')
-        tokens:=lexInput(input)
+    if len(os.Args)>1{
+        fmt.Println("reading from file")
+
+        fp:=os.Args[1]
+        data,err:=ioutil.ReadFile(fp)
+        if err!=nil{
+            log.Panic("cannot read file : ",fp)
+        }
+
+        tokens:=lexInput(string(data))
         //fmt.Println(tokens)
-        stats:=Parse(tokens)
+
+        parser:=Parser{tokens:tokens}
+        stats:=parser.Parse()
         //fmt.Println(stats)
         //the above does nothing
 
         //stats:=genTestParse()
         intr.InterpretAst(stats)
 
-
-        //fmt.Println(tokenizer.tokens)
+    } else{
+        cliInterpret(&intr)
     }
 
 
+
+
+}
+
+
+
+
+func cliInterpret(intr* Interpreter){
+
+    fmt.Println("reading commands from stdin")
+
+    for{
+        fmt.Print(">")
+        reader:= bufio.NewReader(os.Stdin)
+        input, _ :=reader.ReadString('\n')
+        tokens:=lexInput(input)
+
+        parser:=Parser{tokens:tokens}
+        stats:=parser.Parse()
+
+        intr.InterpretAst(stats)
+
+    }
 }
 

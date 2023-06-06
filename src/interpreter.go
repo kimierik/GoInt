@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 
 
@@ -29,7 +31,7 @@ func (int*Interpreter) addCoreFns(){
     v = fmt.Println
     lbod = append(lbod, v)
 
-    int.functions["log"] = Function{body: lbod}
+    int.functions["log"] = Function{body: lbod,name: "log"}
 }
 
 
@@ -39,14 +41,20 @@ func (int*Interpreter) InterpretAst(stats []Statement){
         switch statement:= stats[i];statement.(type){
         case Corefn:
             fmt.Println("corefn type")
+
+            //function statement
         case Function:
-            fmt.Println("fun")
+            fn:=statement.(Function)
+            //fmt.Println("declaring fn: ",fn.name, ". params: ",fn.params, ". with body: ",fn.body)
+            int.functions[fn.name]=fn
+            //fmt.Println(int.functions)
+
         case FuncCall:
             //now we need to figure out how do we membets from the funcall thing 
             str:=statement.(FuncCall).fName
             prms:=statement.(FuncCall).params
             //fmt.Println("funcall: ",str)
-            callFuncion(int.functions[str], prms)
+            int.callFuncion(int.functions[str], prms)
 
 
         default: 
@@ -58,14 +66,26 @@ func (int*Interpreter) InterpretAst(stats []Statement){
 
 
 
-func callFuncion(fn Function, params []Expr){
+func (int*Interpreter)callFuncion(fn Function, params []Expr){
+
+    //fmt.Println("called: ",fn.name, "with params: ", fn.params, "has body : ",fn.body)   
+    //loop statements in body
     for i:=0; i<len(fn.body);i++{
-        fn.body[i].(Corefn)(params)
+
+        switch fun:=fn.body[i]; fun.(type){
+            case Corefn:
+                fn.body[i].(Corefn)(params)
+
+            //if function call 
+            case FuncCall: 
+                a:=int.functions[fun.(FuncCall).fName]
+                //fmt.Println("a.params: ",fun.(FuncCall).params) 
+                int.callFuncion(a,fun.(FuncCall).params)
+        }
         //prints  [{int}] 
         //[] since []expr 
         //{} since ilit struct
         //would need to spread params and then take the values themselves
-
     }
 }
 

@@ -52,14 +52,12 @@ func lexInput(input string)[]Token{
         char:=input[i]
 
 
-        //do we just drop the switch fo whiles etc
         if char>='0'&&char<='9'{
             lit:=handleIntLiteral(&i,&input)
             tokens = append(tokens, Token{IntLiteral,lit})
             continue
         }
 
-        //is identifier uses the same function as StringLiteral for simplicity
         if char>='a'&&char<='z' || char>='A'&&char<='Z'{
             id:=handleId(&i,&input)
             tokens = append(tokens, Token{Identifier,id})
@@ -114,7 +112,7 @@ func lexInput(input string)[]Token{
 
 
     }
-    tokens = append(tokens, Token{EOF,"s"})
+    tokens = append(tokens, Token{EOF,"EOF TOKEN"})
     return tokens
 
 }
@@ -144,7 +142,6 @@ func handleId(index *int, input *string) string{
 
 func handleStringLiteral(index *int, input *string) string{
     var literalbuffer []byte
-    //untill
 
     for (*input)[*index]!= '"'{
         literalbuffer=append(literalbuffer,(*input)[*index])
