@@ -3,8 +3,8 @@
 
 ** Todo
    - [ ] variables    
-   - [ ] function declaretions  
-   - [ ] interpreting files  
+   - [X] function declaretions  
+   - [X] interpreting files  
    - [ ] operrands  
    - [ ] somethig cool :)  
 
