@@ -5,7 +5,7 @@
    - [ ] variables    
    - [X] function declaretions  
    - [X] interpreting files  
-   - [ ] operrands  
+   - [-] operrands  
    - [ ] somethig cool :)  
 
 ** supported features
