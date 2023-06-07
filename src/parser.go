@@ -260,7 +260,7 @@ func (self*Parser) EvaluateExpression(toEvalueate []Token)Expr{
             val,_:=strconv.ParseInt(  postfix[i].tokenVal,0,32)
             expressions = append(expressions, Iliteral{ int(val)})
         }else{
-            fmt.Println(expressions)
+            //fmt.Println(expressions)
             l:=pop(&expressions)
             r:=pop(&expressions)
             expressions=append(expressions,  Operaton{ l:l, r: r, opp: postfix[i].tokenVal})
