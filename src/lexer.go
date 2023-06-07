@@ -95,6 +95,12 @@ func lexInput(input string)[]Token{
             continue
         }
 
+        if char =='*' || char=='+' ||char=='-'|| char=='/' {
+            i++; 
+            tokens = append(tokens, Token{Operator,string(char)})
+            continue
+        }
+
 
         //if whitespace 
         if char==' ' || char=='\n' ||char=='\t'{

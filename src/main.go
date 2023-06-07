@@ -64,6 +64,7 @@ func cliInterpret(intr* Interpreter){
 
         parser:=Parser{tokens:tokens}
         stats:=parser.Parse()
+        //fmt.Println(stats)
 
         intr.InterpretAst(stats)
 
