@@ -249,17 +249,21 @@ func (self*Parser) EvaluateExpression(toEvalueate []Token)Expr{
 
     //fmt.Println("post fix notation of eval is")
     //fmt.Println(postfix)
-    var exprs []Token
+    //var exprs []Token
     var expressions []Expr
+
 
     for i:=0;i<len(postfix);i++{
         if postfix[i].tokenType!=Operator{
-            exprs = append(exprs, postfix[i])
+            //switch and match what the token is?
+            //right now all happens to be ints TODO change
+            val,_:=strconv.ParseInt(  postfix[i].tokenVal,0,32)
+            expressions = append(expressions, Iliteral{ int(val)})
         }else{
-            //this sends tokens.. should be literals
-            l,_:=strconv.ParseInt(pop(&exprs).tokenVal,0,32)
-            r,_:=strconv.ParseInt(pop(&exprs).tokenVal,0,32)
-            expressions=append(expressions,  Operaton{ l:Iliteral{int(l)}, r: Iliteral{int(r)}, opp: postfix[i].tokenVal})
+            fmt.Println(expressions)
+            l:=pop(&expressions)
+            r:=pop(&expressions)
+            expressions=append(expressions,  Operaton{ l:l, r: r, opp: postfix[i].tokenVal})
         }
     }
 
@@ -284,6 +288,7 @@ func getOperatorPrecidence(op string)int{
         return 1
 
     default:
+        fmt.Println("token default")
         return 0
     }
 
@@ -303,14 +308,10 @@ func InfixToPostfix(tokens []Token)[]Token{
             //if the precidence of the current opp is more than the precidence of the opp on the top of the stack
             //push it 
 
-            //for
-            //stack is 0 so it not worka
-            for len(stack)>0&& getOperatorPrecidence(tokens[i].tokenVal) > getOperatorPrecidence( stack[len(stack)-1].tokenVal ) {
+            for len(stack)>0&& getOperatorPrecidence(tokens[i].tokenVal) <= getOperatorPrecidence( stack[len(stack)-1].tokenVal ) {
                 postfix = append(postfix, pop(&stack))
             }
             stack = append(stack, tokens[i])
-            
-
 
         }
 
