@@ -104,7 +104,7 @@ func (self*Parser)Parse()[]Statement{
 
 func (self*Parser) parseStatement()Statement{
     //could be call or decl
-    fmt.Println("parsing statement from token " , self.tokens[self.currentToken], "at ", self.currentToken)
+    //fmt.Println("parsing statement from token " , self.tokens[self.currentToken], "at ", self.currentToken)
     if self.tokens[self.currentToken].tokenType==Identifier && self.tokens[self.currentToken+1].tokenVal=="(" { 
         statement:=self.parseFunction()
         return statement

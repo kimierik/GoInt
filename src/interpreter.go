@@ -163,6 +163,7 @@ func (int*Interpreter)callFuncion(fn Function, params []Expr){
     var ResolvedParameters []Expr
     //its a list?
 
+    //TODO make this not look like shit
     for i:=0; i<len(params);i++{
         switch param:=params[i];param.(type){
         case Operaton:
@@ -173,7 +174,16 @@ func (int*Interpreter)callFuncion(fn Function, params []Expr){
         case Stringliteral:
             ResolvedParameters = append(ResolvedParameters,param.(Stringliteral).val )
         case VariableRefrence:
-            ResolvedParameters = append(ResolvedParameters,int.memory[param.(VariableRefrence).name])
+            v:=int.memory[param.(VariableRefrence).name]
+            switch v.(type){
+            case Operaton:
+                ResolvedParameters = append(ResolvedParameters,int.resolveOppTree(v.(Operaton)))
+
+            default:
+                ResolvedParameters = append(ResolvedParameters,v)
+            }
+
+            
 
         default:
             //fmt.Println("call fn defaulted params[i] is ")
