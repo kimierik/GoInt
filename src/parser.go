@@ -43,6 +43,12 @@ type Operaton struct{
 }
 
 
+type VariableAssigment struct{
+    name string
+    value Expr
+}
+
+
 //function
 type Function struct{
     name string
@@ -98,10 +104,19 @@ func (self*Parser)Parse()[]Statement{
 
 func (self*Parser) parseStatement()Statement{
     //could be call or decl
+    fmt.Println("parsing statement from token " , self.tokens[self.currentToken], "at ", self.currentToken)
     if self.tokens[self.currentToken].tokenType==Identifier && self.tokens[self.currentToken+1].tokenVal=="(" { 
         statement:=self.parseFunction()
         return statement
     }
+
+    //parse variable assigment
+    if self.tokens[self.currentToken].tokenType==Identifier && self.tokens[self.currentToken+1].tokenType==Equals { 
+        statement:=self.parseVariableAssigment()
+        return statement
+
+    }
+    
     if self.tokens[self.currentToken].tokenType==EOF{
         return nil
     }
@@ -112,6 +127,34 @@ func (self*Parser) parseStatement()Statement{
 }
 
 
+//assumes the first token is the id
+func (self *Parser) parseVariableAssigment()Statement{
+    //a value or operation expression
+    vari:= VariableAssigment{name: self.tokens[self.currentToken].tokenVal}
+    self.currentToken++//jump over var name
+    self.currentToken++ //jump over =
+    
+    //is it a function 
+    //is it a literal
+    //is it an operand expression
+    // do i need to add \n to the list of things that we could be looking at so we can determine when do we end var assigmen
+    //or do we just do myvar=2*3+123*123*3/1;
+    //i think we could do that
+
+
+
+    var toEvalueate []Token
+    for self.tokens[self.currentToken].tokenType!=Semicolon{
+        toEvalueate = append(toEvalueate, self.tokens[self.currentToken])
+        self.currentToken++
+    }
+
+    //self.currentToken++ //skip ; //for some reason this is not needed
+    vari.value=self.EvaluateExpression(toEvalueate)
+
+
+    return vari
+}
 
 
 
@@ -150,6 +193,8 @@ func (self*Parser) parseFnDecl()Function{
     
 
     for self.tokens[self.currentToken].tokenVal!=")"{
+        ///TODO replace parse expression with something else
+        // own function for parsing params for declaration
         expression:=self.parseExpression()
         decl.params = append(decl.params, expression)
         self.currentToken++
@@ -194,6 +239,7 @@ func (self*Parser) parseFuncParameters() []Expr{
 
 
     //TODO this needs to change if we want funcs in expressions
+    //TODO variables
 
 
     var toEvalueate []Token
@@ -242,6 +288,8 @@ func (self*Parser) EvaluateExpression(toEvalueate []Token)Expr{
             return Iliteral{int(i)}
         case StringLiteral:
             return Stringliteral{tok.tokenVal}
+        case Identifier:
+            return VariableRefrence{tok.tokenVal}
         }
     }
 
@@ -281,7 +329,6 @@ func getOperatorPrecidence(op string)int{
         return 2
     case "/":
         return 2
-
     case "+":
         return 1
     case "-":

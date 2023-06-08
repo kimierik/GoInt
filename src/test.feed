@@ -1,8 +1,13 @@
 
 testfn(){
-    log(2,3)
+    log("multiple nums: ",2,3)
 }
 
-testfn()
+testfn();
+log("an expression :", 2*3+1/3+3);
+
+asdf=1+1;
+log("asdf variable :",asdf)
+
 
 

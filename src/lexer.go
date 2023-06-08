@@ -24,6 +24,9 @@ const (
     Paren
     Curly
     Comma
+    Equals
+
+    Semicolon
 
     EOF
 )
@@ -92,6 +95,18 @@ func lexInput(input string)[]Token{
         if char ==',' {
             i++; 
             tokens = append(tokens, Token{Comma,string(char)})
+            continue
+        }
+
+        if char ==';' {
+            i++; 
+            tokens = append(tokens, Token{Semicolon,string(char)})
+            continue
+        }
+
+        if char =='=' {
+            i++; 
+            tokens = append(tokens, Token{Equals,string(char)})
             continue
         }
 

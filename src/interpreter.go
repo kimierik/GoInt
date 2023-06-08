@@ -55,6 +55,10 @@ func (int*Interpreter) InterpretAst(stats []Statement){
             //fmt.Println("funcall: ",str)
             int.callFuncion(int.functions[str], prms)
 
+        case VariableAssigment:
+            vari:=statement.(VariableAssigment)
+            int.memory[vari.name]=vari.value
+
 
         default: 
             fmt.Println("interpre defaulted")
@@ -144,6 +148,7 @@ func (intr * Interpreter) resolveOppTree(opp Operaton)Iliteral{
         }
 
     }
+    intr.stack=intr.stack[:0]//clear stack
 
 
 
@@ -165,6 +170,11 @@ func (int*Interpreter)callFuncion(fn Function, params []Expr){
 
         case Iliteral:
             ResolvedParameters = append(ResolvedParameters,param.(Iliteral).val )
+        case Stringliteral:
+            ResolvedParameters = append(ResolvedParameters,param.(Stringliteral).val )
+        case VariableRefrence:
+            ResolvedParameters = append(ResolvedParameters,int.memory[param.(VariableRefrence).name])
+
         default:
             //fmt.Println("call fn defaulted params[i] is ")
             //fmt.Println(params[i])
